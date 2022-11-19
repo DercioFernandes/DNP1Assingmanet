@@ -53,12 +53,12 @@ public class PostController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteAsync(PostBasicDTO dto)
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteAsync(int id)
     {
         try
         {
-            await logic.DeleteAsync(dto);
+            await logic.DeleteAsync(id);
             return Ok();
         }
         catch (Exception e)

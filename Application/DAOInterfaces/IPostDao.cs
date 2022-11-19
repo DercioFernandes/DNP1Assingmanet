@@ -8,6 +8,6 @@ public interface IPostDao
     Task<Post> CreateAsync(Post post);
     Task<Post?> GetByIdAsync(int idCreator);
     public Task<IEnumerable<Post>> GetAsync(SearchPostParametersDTO searchParameters);
-    Task DeleteAsync(Post post);
+    Task DeleteAsync(int idPost);
     Task<Post> UpdateAsync(Post post);
 }

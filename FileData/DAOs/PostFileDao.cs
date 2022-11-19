@@ -48,9 +48,14 @@ public class PostFileDao : IPostDao
         return Task.FromResult(posts);
     }
 
-    public async Task DeleteAsync(Post post)
+    public async Task DeleteAsync(int idPost)
     {
-        context.Posts.Remove(post);
+        IEnumerable<Post> posts = context.Posts.AsEnumerable();
+        if (idPost != null)
+        {
+            posts = context.Posts.Where(u => u.idPost == idPost);
+        }
+        context.Posts.Remove(posts.FirstOrDefault());
         context.SaveChanges();
     }
 

@@ -33,15 +33,9 @@ public class PostLogic : IPostLogic
         return postDao.GetAsync(dto);
     }
 
-    public async Task DeleteAsync(PostBasicDTO dto)
+    public async Task DeleteAsync(int idPost)
     {
-        Post toDelete = new Post
-        {
-            idPost = dto.idPost,
-            idCreator = dto.idCreator,
-            title = dto.title
-        };
-        await postDao.DeleteAsync(toDelete);
+        await postDao.DeleteAsync(idPost);
     }
 
     public async Task<Post> UpdateAsync(PostUpdateDTO dto)
