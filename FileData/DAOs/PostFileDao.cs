@@ -47,4 +47,31 @@ public class PostFileDao : IPostDao
 
         return Task.FromResult(posts);
     }
+
+    public async Task DeleteAsync(Post post)
+    {
+        context.Posts.Remove(post);
+        context.SaveChanges();
+    }
+
+    public async Task<Post> UpdateAsync(Post post)
+    {
+        IEnumerable<Post> posts = context.Posts.AsEnumerable();
+        if (post.idPost != null)
+        {
+            posts = context.Posts.Where(u => u.idPost == post.idPost);
+        }
+        foreach (var poste in posts)
+        {
+            if(!post.title.Equals(poste.title))
+                post.title = poste.title;
+            if(post.idCreator!=poste.idCreator)
+                post.idCreator = poste.idCreator;
+            context.Posts.Remove(poste);
+            context.SaveChanges();
+        }
+
+        Post resultPost = posts.FirstOrDefault();
+        return resultPost;
+    }
 }

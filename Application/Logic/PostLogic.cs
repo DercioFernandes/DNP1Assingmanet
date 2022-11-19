@@ -32,7 +32,30 @@ public class PostLogic : IPostLogic
     {
         return postDao.GetAsync(dto);
     }
-    
+
+    public async Task DeleteAsync(PostBasicDTO dto)
+    {
+        Post toDelete = new Post
+        {
+            idPost = dto.idPost,
+            idCreator = dto.idCreator,
+            title = dto.title
+        };
+        await postDao.DeleteAsync(toDelete);
+    }
+
+    public async Task<Post> UpdateAsync(PostUpdateDTO dto)
+    {
+        Post toUpdate = new Post
+        {
+            idPost = dto.idPost,
+            idCreator = dto.idCreator,
+            title = dto.title
+        };
+        Post updated = await postDao.UpdateAsync(toUpdate);
+        return updated;
+    }
+
     private static void ValidateData(PostCreationDTO postToCreate)
     {
         String title = postToCreate.title;
