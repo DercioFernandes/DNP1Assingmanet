@@ -50,7 +50,16 @@ public class PostController : ControllerBase
     [HttpPatch]
     public async Task<ActionResult<Post>> UpdateAsync(PostUpdateDTO dto)
     {
-        return Ok();
+        try
+        {
+            Post post = await logic.UpdateAsync(dto);
+            return Created($"/users/{post.idPost}", post);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
     }
 
     [HttpDelete("{id:int}")]
