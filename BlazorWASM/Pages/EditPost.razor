@@ -1,0 +1,90 @@
+﻿@page "/EditPost"
+@using HttpClients.ClientInterfaces
+@using Microsoft.AspNetCore.Components
+@using global::Shared.Models
+@using global::Shared.DTOs
+@inject IPostService todoService
+@inject IUserService userService
+@inject NavigationManager navMgr
+
+<div class="card">
+    @if (users == null)
+    {
+        <label>Loading users...</label>
+    }
+    else if (!users.Any())
+    {
+        <label>No users, you cannot create a Todo</label>
+    }
+    else if (dto == null)
+    {
+        <label>Loading Todo data..</label>
+    }
+    else
+    {
+        <h3>Update Post</h3>
+        <div class="form-group field">
+            <label>Title:</label>
+            <input type="text" @bind="dto.title"/>
+        </div>
+        <div class="form-group field">
+            <label>Assignee:</label>
+            <select @bind="dto.idCreator">
+                <option>Choose</option>
+                @foreach (User user in users)
+                {
+                    <option value="@user.idUser">@user.userName</option>
+                }
+            </select>
+        </div>
+        <div class="button-row">
+            <button @onclick="UpdateAsync" class="acceptbtn">Update</button>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(msg))
+    {
+        <label style="color: red">@msg</label>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private PostUpdateDTO dto = null!;
+    private string msg = "";
+    private IEnumerable<User>? users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        msg = "";
+        try
+        {
+            users = await userService.GetUsers();
+            Post todoData = await todoService.GetByIdAsync(Id);
+            User currentlyAssigned = users.First(user => user.idUser.Equals(todoData.idCreator));
+
+            dto = new(Id, currentlyAssigned.idUser, todoData.title);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+
+    private async Task UpdateAsync()
+    {
+        try
+        {
+            await todoService.Update(dto);
+            navMgr.NavigateTo("/ViewPosts");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+}

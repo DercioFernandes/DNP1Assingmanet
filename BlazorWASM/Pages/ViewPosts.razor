@@ -1,0 +1,130 @@
+﻿@page "/ViewPosts"
+@using global::Shared.Models
+@using HttpClients.ClientInterfaces
+@inject IPostService todoService
+@inject NavigationManager navMgr
+<h3>Posts</h3>
+<div class="filter-bar">
+    <div class="filters-container">
+        <img src="icons/@(doShowFilters ? "clear_" : "")funnel.png" class="funnel" @onclick="@(() => doShowFilters = !doShowFilters)" alt="Funnel"/>
+        @if (doShowFilters)
+        {
+            <div class="filter">
+                <label>Username:</label>
+                <input type="text" @bind="usernameFilter"/>
+            </div>
+            <div class="filter">
+                <label>User id:</label>
+                <input type="number" @bind="userIdFilter"/>
+            </div>
+        }
+    </div>
+</div>
+
+<div>
+    <button @onclick="LoadTodos">Load</button>
+</div>
+
+@if (todos == null)
+{
+}
+else if (!todos.Any())
+{
+    <p>No Posts to display</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Todo ID</th>
+            <th>Owner ID</th>
+            <th>Title</th>
+            <th>Edit</th>
+            <th>Delete?</th>
+            <th>Read more</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in todos)
+        {
+            <tr>
+                <td>@item.idPost</td>
+                <td>@item.idCreator</td>
+                <td>@item.title</td>
+                <td>
+                    <img src="icons/edit.gif" class="funnel" @onclick="@(() => navMgr.NavigateTo($"/EditPost/{item.idPost}"))"/>
+                </td>
+                <td>
+                    <label @onclick="@(() => RemoveTodo(item.idPost))" style="cursor:pointer; color: red; font-weight: bold">
+                        &#x2717;
+                    </label>
+                </td>
+                <td>
+                    <label @onclick="@(() => navMgr.NavigateTo($"/DetailsPost/{item.idPost}"))" style="cursor:pointer; color: blue; font-weight: bold">
+                                            &#x2717;
+                    </label>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@if (!string.IsNullOrEmpty(msg))
+{
+    <label style="color: red">@msg</label>
+}
+
+@code {
+    private IEnumerable<Post>? todos;
+    private string msg = "";
+    private bool doShowFilters = false;
+
+    private string? usernameFilter;
+    private int? userIdFilter;
+
+    private async Task LoadTodos()
+    {
+        try
+        {
+            todos = await todoService.GetPosts(userIdFilter);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+
+    private async Task RemoveTodo(int todoId)
+    {
+        msg = "";
+        try
+        {
+            await todoService.Delete(todoId);
+            
+            var list = new List<Post>(todos!);
+            list.RemoveAll(todo => todo.idPost == todoId);
+            todos = list.AsEnumerable();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+
+    private async Task OpenDetails(int todoId)
+    {
+        msg = "";
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+}

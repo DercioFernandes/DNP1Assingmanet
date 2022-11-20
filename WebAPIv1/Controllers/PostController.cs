@@ -17,7 +17,7 @@ public class PostController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<Post>> CreateAsync(PostCreationDTO dto)
+    public async Task<ActionResult<Post>> CreateAsync([FromBody] PostCreationDTO dto)
     {
         try
         {
@@ -48,7 +48,7 @@ public class PostController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Post>> UpdateAsync(PostUpdateDTO dto)
+    public async Task<ActionResult<Post>> UpdateAsync([FromBody] PostUpdateDTO dto)
     {
         try
         {
@@ -63,7 +63,7 @@ public class PostController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult> DeleteAsync(int id)
+    public async Task<ActionResult> DeleteAsync([FromRoute] int id)
     {
         try
         {
