@@ -9,7 +9,6 @@ public class PostUpdateDTO
     public PostUpdateDTO(int idPost, int idCreator, String title)
     {
         this.idPost = idPost;
-        this.idCreator = idCreator;
         this.title = title;
     }
 }

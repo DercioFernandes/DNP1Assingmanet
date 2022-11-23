@@ -1,4 +1,4 @@
-﻿using Application.DAOInterfaces;
+﻿/*using Application.DAOInterfaces;
 using Shared.DTOs;
 using Shared.Models;
 
@@ -33,7 +33,7 @@ public class PostFileDao : IPostDao
     public Task<Post?> GetByIdAsync(int idCreator)
     {
         Post? existing =
-            context.Posts.FirstOrDefault(u => (u.idCreator == idCreator));
+            context.Posts.FirstOrDefault(u => (u.idUser == idCreator));
         return Task.FromResult(existing);
     }
 
@@ -42,7 +42,7 @@ public class PostFileDao : IPostDao
         IEnumerable<Post> posts = context.Posts.AsEnumerable();
         if (searchParameters.idCreatorIs != null)
         {
-            posts = context.Posts.Where(u => u.idCreator == searchParameters.idCreatorIs);
+            posts = context.Posts.Where(u => u.idUser == searchParameters.idCreatorIs);
         }
 
         return Task.FromResult(posts);
@@ -70,8 +70,8 @@ public class PostFileDao : IPostDao
         {
             if(!post.title.Equals(poste.title))
                 post.title = poste.title;
-            if(post.idCreator!=poste.idCreator)
-                post.idCreator = poste.idCreator;
+            if(post.idUser!=poste.idUser)
+                post.idUser = poste.idUser;
             context.Posts.Remove(poste);
             context.SaveChanges();
         }
@@ -79,4 +79,4 @@ public class PostFileDao : IPostDao
         Post resultPost = posts.FirstOrDefault();
         return resultPost;
     }
-}
+}*/

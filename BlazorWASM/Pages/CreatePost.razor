@@ -43,7 +43,7 @@
 
 @code {
     private IEnumerable<User>? users;
-    private int? selectedUserId;
+    private int selectedUserId;
     private string todoTitle = "";
     private string todoDesc = "";
 
@@ -75,7 +75,7 @@
         }
         try
         {
-            PostCreationDTO dto = new(null, (int)selectedUserId, todoTitle);
+            PostCreationDTO dto = new((int)selectedUserId, todoTitle);
             await postService.Create(dto);
             showModal = true;
         }

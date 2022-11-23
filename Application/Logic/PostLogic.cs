@@ -8,6 +8,7 @@ namespace Application.Logic;
 public class PostLogic : IPostLogic
 {
     private readonly IPostDao postDao;
+    private readonly IUserDao userDao;
 
     public PostLogic(IPostDao postDao)
     {
@@ -17,9 +18,14 @@ public class PostLogic : IPostLogic
     public async Task<Post> CreateAsync(PostCreationDTO dto)
     {
         ValidateData(dto);
+        User? user = await userDao.GetByIdAsync(dto.idCreator);
+        if (user == null)
+        {
+            throw new Exception($"User with id {dto.idCreator} was not found.");
+        }
         Post toCreate = new Post
         {
-            idCreator = dto.idCreator,
+            creator = user,
             title = dto.title
         };
     
@@ -40,14 +46,19 @@ public class PostLogic : IPostLogic
 
     public async Task<Post> UpdateAsync(PostUpdateDTO dto)
     {
+        User? user = await userDao.GetByIdAsync(dto.idCreator);
+        if (user == null)
+        {
+            throw new Exception($"User with id {dto.idCreator} was not found.");
+        }
         Post toUpdate = new Post
         {
             idPost = dto.idPost,
-            idCreator = dto.idCreator,
+            creator = user,
             title = dto.title
         };
-        Post updated = await postDao.UpdateAsync(toUpdate);
-        return updated;
+        await postDao.UpdateAsync(toUpdate);
+        return toUpdate;
     }
 
     private static void ValidateData(PostCreationDTO postToCreate)

@@ -23,7 +23,8 @@ public class UserLogic : IUserLogic
         ValidateData(dto);
         User toCreate = new User
         {
-            userName = dto.userName
+            userName = dto.userName,
+            password = dto.password
         };
     
         User created = await userDao.CreateAsync(toCreate);
