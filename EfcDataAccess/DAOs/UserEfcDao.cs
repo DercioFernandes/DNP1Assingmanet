@@ -41,9 +41,10 @@ public class UserEfcDao : IUserDao
         return result;
     }
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<User?> GetByIdAsync(int idUser)
     {
-        User? user = await context.Users.FindAsync(id);
+        Console.WriteLine("idUser: " + idUser);
+        User? user = await context.Users.FindAsync(idUser);
         return user;
     }
 }

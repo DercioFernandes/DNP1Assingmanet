@@ -4,12 +4,12 @@ namespace Shared.DTOs;
 
 public class PostCreationDTO
 {
-    public int idCreator { get;  }
+    public int idUser { get;  }
     public String title { get;  }
 
-    public PostCreationDTO(int idCreator, String title)
+    public PostCreationDTO(int idUser, String title)
     {
-        this.idCreator = idCreator;
+        this.idUser = idUser;
         this.title = title;
     }
 }

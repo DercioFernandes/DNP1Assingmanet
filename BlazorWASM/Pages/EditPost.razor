@@ -63,7 +63,7 @@
         {
             users = await userService.GetUsers();
             Post todoData = await todoService.GetByIdAsync(Id);
-            User currentlyAssigned = users.First(user => user.idUser.Equals(todoData.creator.idUser));
+            User currentlyAssigned = users.First(user => user.idUser.Equals(todoData.idUser));
 
             dto = new(Id, currentlyAssigned.idUser, todoData.title);
         }

@@ -10,27 +10,24 @@ public class PostLogic : IPostLogic
     private readonly IPostDao postDao;
     private readonly IUserDao userDao;
 
-    public PostLogic(IPostDao postDao)
+    public PostLogic(IPostDao postDao, IUserDao userDao)
     {
         this.postDao = postDao;
+        this.userDao = userDao;
     }
     
     public async Task<Post> CreateAsync(PostCreationDTO dto)
     {
         ValidateData(dto);
-        User? user = await userDao.GetByIdAsync(dto.idCreator);
+        User? user = await userDao.GetByIdAsync(dto.idUser);
         if (user == null)
         {
-            throw new Exception($"User with id {dto.idCreator} was not found.");
+            throw new Exception($"User with id {dto.idUser} was not found.");
         }
-        Post toCreate = new Post
-        {
-            creator = user,
-            title = dto.title
-        };
+
+        Post toCreate = new Post(dto.idUser, dto.title);
     
         Post created = await postDao.CreateAsync(toCreate);
-    
         return created;
     }
 
@@ -51,12 +48,8 @@ public class PostLogic : IPostLogic
         {
             throw new Exception($"User with id {dto.idCreator} was not found.");
         }
-        Post toUpdate = new Post
-        {
-            idPost = dto.idPost,
-            creator = user,
-            title = dto.title
-        };
+
+        Post toUpdate = new Post(dto.idPost, dto.idCreator, dto.title);
         await postDao.UpdateAsync(toUpdate);
         return toUpdate;
     }
