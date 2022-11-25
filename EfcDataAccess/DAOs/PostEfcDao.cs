@@ -33,18 +33,18 @@ public class PostEfcDao : IPostDao
     {
         Post? found = await context.Posts
             .AsNoTracking()
-            .Include(post => post.idUser)
+            .Include(post => post.creator.idUser)
             .SingleOrDefaultAsync(post => post.idPost == postId);
         return found;
     }
 
     public async Task<IEnumerable<Post>> GetAsync(SearchPostParametersDTO searchParameters)
     {
-        IQueryable<Post> query = context.Posts.Include(post => post.idUser).AsQueryable();
+        IQueryable<Post> query = context.Posts.Include(post => post.creator.idUser).AsQueryable();
 
         if (searchParameters.idCreatorIs != null)
         {
-            query = query.Where(t => t.idUser == searchParameters.idCreatorIs);
+            query = query.Where(t => t.creator.idUser == searchParameters.idCreatorIs);
         }
         
         List<Post> result = await query.ToListAsync();

@@ -50,7 +50,7 @@ else
         {
             <tr>
                 <td>@item.idPost</td>
-                <td>@item.idUser</td>
+                <td>@item.creator.idUser</td>
                 <td>@item.title</td>
                 <td>
                     <img src="icons/edit.gif" class="funnel" @onclick="@(() => navMgr.NavigateTo($"/EditPost/{item.idPost}"))"/>

@@ -25,7 +25,11 @@ public class PostLogic : IPostLogic
             throw new Exception($"User with id {dto.idUser} was not found.");
         }
 
-        Post toCreate = new Post(dto.idUser, dto.title);
+        Post toCreate = new Post
+        {
+            creator = user,
+            title = dto.title
+        };
     
         Post created = await postDao.CreateAsync(toCreate);
         return created;
@@ -49,7 +53,12 @@ public class PostLogic : IPostLogic
             throw new Exception($"User with id {dto.idCreator} was not found.");
         }
 
-        Post toUpdate = new Post(dto.idPost, dto.idCreator, dto.title);
+        Post toUpdate = new Post
+        {
+            idPost = dto.idPost,
+            creator = user,
+            title = dto.title
+        };
         await postDao.UpdateAsync(toUpdate);
         return toUpdate;
     }

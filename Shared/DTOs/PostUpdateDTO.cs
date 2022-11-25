@@ -10,5 +10,6 @@ public class PostUpdateDTO
     {
         this.idPost = idPost;
         this.title = title;
+        this.idCreator = idCreator;
     }
 }
