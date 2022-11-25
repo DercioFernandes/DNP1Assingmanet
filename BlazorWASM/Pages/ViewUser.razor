@@ -2,6 +2,7 @@
 @inject IUserService userService;
 @using global::Shared.Models
 @using HttpClients.ClientInterfaces
+@inject NavigationManager navMgr
 <h3 style="text-align: center">Overview of all users</h3>
 
 @if (!string.IsNullOrEmpty(msg))
@@ -24,7 +25,7 @@ else
     <div class="users-container">
         @foreach (User user in users)
         {
-            <div class="user-card">
+            <div class="user-card"  @onclick="@(() => navMgr.NavigateTo($"/UserProfile/{user.idUser}"))">
                 <label>@user.userName</label>
                 <br/>
                 <label>@user.idUser</label>

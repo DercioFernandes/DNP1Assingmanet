@@ -1,6 +1,61 @@
-﻿@page "/UserProfile"
-<h3>UserProfile</h3>
+﻿@page "/UserProfile/{Id:int}"
+@using HttpClients.ClientInterfaces
+@using Microsoft.AspNetCore.Components
+@using global::Shared.Models
+@using global::Shared.DTOs
+@inject IPostService postService
+@inject IUserService userService
+@inject NavigationManager navMgr
+
+<div class="card">
+    <h3>Post Detail</h3>
+    <div class="form-group field">
+        <label>ID User:</label>
+        <p @bind="dto.idUser"></p> 
+    </div>
+    
+    <div class="form-group field">
+        <label>Username:</label>
+        <p @bind="dto.userName"></p> 
+    </div>
+    
+    <div class="form-group field">
+        <label>Post:</label>
+            @foreach(Post post in posts)
+            {
+                <label>Title: </label>
+                <p @bind="post.title"  @onclick="@(() => navMgr.NavigateTo($"/PostDetail/{post.idPost}"))"></p>
+                <hr/>
+            }
+    </div>
+    @if (!string.IsNullOrEmpty(msg))
+    {
+        <label style="color: red">@msg</label>
+    }
+</div>
 
 @code {
-    
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private UserBasicDTO dto = null!;
+    private string msg = "";
+    private IEnumerable<Post>? posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        msg = "";
+        try
+        {
+            UserBasicDTO userBasic = await userService.GetUserById(Id);
+            posts = await postService.GetPosts(userBasic.idUser);
+            dto = new UserBasicDTO(userBasic.idUser, userBasic.userName, "");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
 }

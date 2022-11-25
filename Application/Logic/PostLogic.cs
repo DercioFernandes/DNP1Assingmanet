@@ -63,6 +63,22 @@ public class PostLogic : IPostLogic
         return toUpdate;
     }
 
+    public async Task<PostBasicDTO> GetByIdAsync(int idPost)
+    {
+        if (idPost == 0)
+        {
+            
+        }
+        Post? post = await postDao.GetByIdAsync(idPost);
+        if (post == null)
+        {
+            throw new Exception($"Post with id {idPost} not found");
+        }
+
+        return new PostBasicDTO(post.idPost, post.creator, post.title);
+    }
+
+
     private static void ValidateData(PostCreationDTO postToCreate)
     {
         String title = postToCreate.title;

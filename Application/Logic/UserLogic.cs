@@ -37,6 +37,17 @@ public class UserLogic : IUserLogic
         return userDao.GetAsync(searchParameters);
     }
 
+    public async Task<UserBasicDTO> GetByIdAsync(int idUser)
+    {
+        User? user = await userDao.GetByIdAsync(idUser);
+        if (user == null)
+        {
+            throw new Exception($"Post with id {idUser} not found");
+        }
+
+        return new UserBasicDTO(user.idUser,user.userName,user.password);
+    }
+
     private static void ValidateData(UserCreationDTO userToCreate)
     {
         string userName = userToCreate.userName;

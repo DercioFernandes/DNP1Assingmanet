@@ -1,34 +1,13 @@
 ﻿@page "/ViewPosts"
 @using global::Shared.Models
 @using HttpClients.ClientInterfaces
-@inject IPostService todoService
+@inject IPostService postService
 @inject NavigationManager navMgr
 <h3>Posts</h3>
-<div class="filter-bar">
-    <div class="filters-container">
-        <img src="icons/@(doShowFilters ? "clear_" : "")funnel.png" class="funnel" @onclick="@(() => doShowFilters = !doShowFilters)" alt="Funnel"/>
-        @if (doShowFilters)
-        {
-            <div class="filter">
-                <label>Username:</label>
-                <input type="text" @bind="usernameFilter"/>
-            </div>
-            <div class="filter">
-                <label>User id:</label>
-                <input type="number" @bind="userIdFilter"/>
-            </div>
-        }
-    </div>
-</div>
-
-<div>
-    <button @onclick="LoadTodos">Load</button>
-</div>
-
-@if (todos == null)
+@if (posts == null)
 {
 }
-else if (!todos.Any())
+else if (!posts.Any())
 {
     <p>No Posts to display</p>
 }
@@ -37,8 +16,8 @@ else
     <table class="table">
         <thead>
         <tr>
-            <th>Todo ID</th>
-            <th>Owner ID</th>
+            <th>Post ID</th>
+            <th>Owner</th>
             <th>Title</th>
             <th>Edit</th>
             <th>Delete?</th>
@@ -46,11 +25,11 @@ else
         </tr>
         </thead>
         <tbody>
-        @foreach (var item in todos)
+        @foreach (var item in posts)
         {
             <tr>
                 <td>@item.idPost</td>
-                <td>@item.creator.idUser</td>
+                <td>@item.creator.userName</td>
                 <td>@item.title</td>
                 <td>
                     <img src="icons/edit.gif" class="funnel" @onclick="@(() => navMgr.NavigateTo($"/EditPost/{item.idPost}"))"/>
@@ -76,18 +55,16 @@ else
 }
 
 @code {
-    private IEnumerable<Post>? todos;
+    private IEnumerable<Post>? posts;
     private string msg = "";
-    private bool doShowFilters = false;
-
-    private string? usernameFilter;
-    private int? userIdFilter;
-
-    private async Task LoadTodos()
+    private int zero = 0;
+    
+    protected override async Task OnInitializedAsync()
     {
+        msg = "";
         try
         {
-            todos = await todoService.GetPosts(userIdFilter);
+            posts = await postService.GetPosts(zero);
         }
         catch (Exception e)
         {
@@ -96,35 +73,21 @@ else
         }
     }
 
-    private async Task RemoveTodo(int todoId)
+    private async Task RemoveTodo(int idPost)
     {
         msg = "";
         try
         {
-            await todoService.Delete(todoId);
+            await postService.Delete(idPost);
             
-            var list = new List<Post>(todos!);
-            list.RemoveAll(todo => todo.idPost == todoId);
-            todos = list.AsEnumerable();
+            var list = new List<Post>(posts!);
+            list.RemoveAll(todo => todo.idPost == idPost);
+            posts = list.AsEnumerable();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             msg = e.Message;
-        }
-    }
-
-    private async Task OpenDetails(int todoId)
-    {
-        msg = "";
-        try
-        {
-            
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
         }
     }
 }

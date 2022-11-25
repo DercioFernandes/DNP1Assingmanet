@@ -1,15 +1,17 @@
-﻿namespace Shared.DTOs;
+﻿using Shared.Models;
+
+namespace Shared.DTOs;
 
 public class PostBasicDTO
 {
-    public int idPost { get; }
-    public int idCreator { get; }
-    public String title { get; }
+    public int idPost { get; set; }
+    public User creator { get; set; }
+    public String title { get; set; }
 
-    public PostBasicDTO(int idPost, int idCreator, String title)
+    public PostBasicDTO(int idPost, User creator, String title)
     {
         this.idPost = idPost;
-        this.idCreator = idCreator;
+        this.creator = creator;
         this.title = title;
     }
 }

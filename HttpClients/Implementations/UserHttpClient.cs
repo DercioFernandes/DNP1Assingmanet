@@ -51,4 +51,21 @@ public class UserHttpClient : IUserService
         })!;
         return users;
     }
+
+    public async Task<UserBasicDTO> GetUserById(int idUser)
+    {
+        string uri = "/users/"+idUser;
+        HttpResponseMessage response = await client.GetAsync(uri);
+        string result = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(result);
+        }
+
+        IEnumerable<UserBasicDTO> users = JsonSerializer.Deserialize<IEnumerable<UserBasicDTO>>(result, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        })!;
+        return users.FirstOrDefault();
+    }
 }

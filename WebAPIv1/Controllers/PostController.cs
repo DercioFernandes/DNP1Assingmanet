@@ -76,4 +76,19 @@ public class PostController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+    
+    [HttpGet("{idPost:int}")]
+    public async Task<ActionResult<PostBasicDTO>> GetById([FromRoute] int idPost)
+    {
+        try
+        {
+            PostBasicDTO result = await logic.GetByIdAsync(idPost);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }

@@ -55,11 +55,13 @@ public class PostHttpClient : IPostService
         }
     }
 
-    public async Task<IEnumerable<Post>> GetPosts(int? idCreator)
+    public async Task<IEnumerable<Post>> GetPosts(int id)
     {
-        
         string uri = "/posts";
-        uri += $"?idCreator={idCreator}";
+        if (id != 0)
+        {
+            uri += $"?idCreator={id}";
+        }
         HttpResponseMessage response = await client.GetAsync(uri);
         string result = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
